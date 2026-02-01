@@ -1,0 +1,4 @@
+repository "RPG_GAME_TEST/RPG_GAME_TEST@10171358561897@cloud"
+  path "/"
+    br "/main"
+    co "/main"
