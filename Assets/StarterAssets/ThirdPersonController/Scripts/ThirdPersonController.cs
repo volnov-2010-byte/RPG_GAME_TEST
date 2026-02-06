@@ -16,6 +16,9 @@ namespace StarterAssets
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
+        public float CrouchSpeed = 1.0f;
+
+        [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
         [Tooltip("Sprint speed of the character in m/s")]
@@ -87,6 +90,14 @@ namespace StarterAssets
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
+        [Header("Crouching")]
+        [SerializeField] private float crouchHeihgt = 1.2f;
+        [SerializeField] private Vector3 crouchCenter = new Vector3(0, 0.595f, 0);
+        [SerializeField] private float crouchSpeed = 7f;
+        private float standHeight;  
+        private Vector3 standCenter;
+        private bool crouched;
+
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
@@ -150,6 +161,10 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            // CROUCH VALUES
+            standCenter = _controller.center;
+            standHeight = _controller.height;
         }
 
         private void Update()
@@ -159,6 +174,14 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            UpdateControllerCollider();
+
+            if (_input.Crouch)
+            {
+                crouched = !crouched;
+
+                _input.Crouch = false;
+            }
         }
 
         private void LateUpdate()
@@ -214,7 +237,11 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = _input.sprint ? SprintSpeed : crouched ? CrouchSpeed : MoveSpeed;
+
+            if (_input.sprint)
+                crouched = false;
+
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -276,7 +303,23 @@ namespace StarterAssets
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+                _animator.SetBool("Crouched", crouched);
             }
+        }
+
+        private void UpdateControllerCollider()
+        {
+            Vector3 targetCenter = standCenter;
+            float targetHeight = standHeight;
+
+            if (crouched)
+            {
+                targetCenter = crouchCenter;
+                targetHeight = crouchHeihgt;
+            }
+
+            _controller.height = Mathf.Lerp(_controller.height, targetHeight, crouchSpeed * Time.deltaTime);
+            _controller.center = Vector3.Lerp(_controller.center, targetCenter, crouchSpeed * Time.deltaTime);
         }
 
         private void JumpAndGravity()
@@ -300,15 +343,24 @@ namespace StarterAssets
                 }
 
                 // Jump
-                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-                {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                if (_input.jump && _jumpTimeoutDelta <= 0.0f && !_animator.IsInTransition(0))
+                {   
+                    _input.jump = false;
 
-                    // update animator if using character
-                    if (_hasAnimator)
+                    if (!crouched)
                     {
-                        _animator.SetBool(_animIDJump, true);
+                        // the square root of H * -2 * G = how much velocity needed to reach desired height
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+
+                        // update animator if using character
+                        if (_hasAnimator)
+                        {
+                            _animator.SetBool(_animIDJump, true);
+                        }
+                        else if (crouched)
+                        {
+                            crouched = false;
+                        }
                     }
                 }
 
