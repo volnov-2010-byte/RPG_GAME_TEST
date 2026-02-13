@@ -43,7 +43,7 @@ public class LedgeToRoofClimb : MonoBehaviour
                 if (Physics.Raycast(shimmyController.ledgeHit.point + new Vector3(0, 0.7f, 0), Vector3.down, out ledgeToClimbHit, 1, ledgeGroundLayer))
                 {
                     foundLedgeToRoofClimb = true;
-                    if (Input.GetKeyDown(KeyCode.Q))
+                    if (Input.GetKeyDown(KeyCode.LeftShift))
                     {
                         climbPointObj = Instantiate(climbPointObjPrefab, ledgeToClimbHit.point, Quaternion.identity);
                         StartCoroutine(LedgeToClimb());

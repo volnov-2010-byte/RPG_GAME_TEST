@@ -16,12 +16,8 @@ namespace StarterAssets
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
-        public float CrouchSpeed = 1.0f;
-
-        [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
-
-        [Tooltip("Sprint speed of the character in m/s")]
+        public float CrouchSpeed = 1.0f;
         public float SprintSpeed = 5.335f;
 
         [Tooltip("How fast the character turns to face movement direction")]
@@ -78,6 +74,15 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        [Header("Camera Settings")]
+        [Tooltip("Camera sensitivity multiplier")]
+        public float CameraSensitivity = 1.0f;
+
+        [Header("Crouching")]
+        [SerializeField] private float crouchHeihgt = 1.2f;
+        [SerializeField] private Vector3 crouchCenter = new Vector3(0, 0.595f, 0);
+        [SerializeField] private float crouchSpeed = 7f;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -90,14 +95,11 @@ namespace StarterAssets
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-        [Header("Crouching")]
-        [SerializeField] private float crouchHeihgt = 1.2f;
-        [SerializeField] private Vector3 crouchCenter = new Vector3(0, 0.595f, 0);
-        [SerializeField] private float crouchSpeed = 7f;
-        private float standHeight;  
+        // crouch
+        private float standHeight;
         private Vector3 standCenter;
         private bool crouched;
-
+        
         // timeout deltatime
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
@@ -223,6 +225,7 @@ namespace StarterAssets
 
                 _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
                 _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+
             }
 
             // clamp our rotations so our values are limited 360 degrees

@@ -365,6 +365,7 @@ GameObject:
   - component: {fileID: 5922403776805679818}
   - component: {fileID: 8995589566889534268}
   - component: {fileID: 3574058547678119627}
+  - component: {fileID: 8464549091422082231}
   - component: {fileID: 6222280337478091723}
   - component: {fileID: 430591329755652386}
   - component: {fileID: 7810758466413853933}
@@ -456,8 +457,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e54e5a728a9234ab24fcf1460ed8a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CrouchSpeed: 1.25
   MoveSpeed: 2
+  CrouchSpeed: 1.25
   SprintSpeed: 5.335
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
@@ -489,11 +490,30 @@ MonoBehaviour:
   BottomClamp: -30
   CameraAngleOverride: 0
   LockCameraPosition: 0
+  CameraSensitivity: 1.5
   crouchHeihgt: 1.2
   crouchCenter: {x: 0, y: 0.595, z: 0}
   crouchSpeed: 7
   _animator: {fileID: 0}
   _controller: {fileID: 0}
+--- !u!114 &8464549091422082231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105302447869139756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 423d556db1f03e14e89d9152a3db6616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CinemachineCameraTarget: {fileID: 6375716403898188333}
+  TopClamp: 70
+  BottomClamp: -30
+  CameraAngleOverride: 0
+  LockCameraPosition: 0
+  CameraSensitivity: 1
 --- !u!114 &6222280337478091723
 MonoBehaviour:
   m_ObjectHideFlags: 0
